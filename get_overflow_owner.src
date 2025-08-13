@@ -51,7 +51,7 @@ get_overflow_owner = function(overflowObject, touchFileName = null, touchPath = 
         if overflowObjectType == "shell" or overflowObjectType == "computer" then
             if overflowObjectType == "shell" then rootFolder = overflowObject.host_computer.File("/root")
             if overflowObjectType == "computer" then rootFolder = overflowObject.File("/root")
-            if rootFolder.has_permission("w") then return "root"
+            if not rootFolder.has_permission("w") == 0 then return "root"
             if overflowObjectType == "shell" then homeFolders = overflowObject.host_computer.File("/home").get_folders
             if overflowObjectType == "computer" then homeFolders = overflowObject.File("/home").get_folders
             for userFolder in homeFolders
