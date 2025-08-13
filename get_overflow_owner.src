@@ -58,7 +58,7 @@ get_overflow_owner = function(overflowObject, touchFileName = null, touchPath = 
                 if userFolder.has_permission("w") then
                     locals.overflowOwner = userFolder.name
                     if locals.overflowOwner == "guest" then return "guest"
-                    return locals.overflowOwner.name
+                    return locals.overflowOwner
                 end if
             end for
         end if
