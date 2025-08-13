@@ -1,0 +1,67 @@
+// Get Overflow Object Owner
+    // @description **Description:**
+    // @description Determine the permission level of an object
+    // @description ---
+    //
+    // @description **Parameters:**
+    // @param {map<string,method>} overflowObject
+    // @description - `overflowObject`:`<object>` The object returned from the exploit
+    // @param {string} touchFileName
+    // @description - `touchFileName`:`<string>` the name of the test file to write to system
+    // @param {string} touchPath
+    // @description - `touchPath`:`<string>` the path to write the test file   
+    //
+    // @description **Parameter Defaults:**
+    // @description - `touchFileName`:`null`
+    // @description - `touchPath`:`/usr`
+    //
+    // @description **Return:**
+    // @return {string}
+    // @description `null` | `string` as `"root"`, `"guest"`, or `"{user_name}"`
+    // @description ---
+    //    
+    // @description **Author:** Svarii
+    // @description **Version:** 0.0.1
+    // @description --- 
+    //
+    // @example objectOwner = get_overflow_owner(overflowResult, "dictionary.txt")
+    // @example
+    // @example objectOwner = get_overflow_owner(overflowResult) //Most Stealth
+    // @example
+    // @example objectOwner = get_overflow_owner(overflowResult, "dictionary.txt", "/usr") //leaves file behind, fastest
+    // @example   
+get_overflow_owner = function(overflowObject, touchFileName = null, touchPath = "/usr")
+    locals.overflowOwner = null
+    overflowObjectType = typeof(locals.overflowObject)
+    if overflowObjectType == "file" then
+        locals.overflowOwner = locals.overflowObject.owner
+    end if
+    if not touchFileName == null then
+        if overflowObjectType == "computer" then
+            locals.overflowObject.touch(touchPath, touchFileName)
+            touchFile = overflowObject.File(touchPath + "/" + touchFileName)
+            locals.overflowOwner = touchFile.owner
+        end if
+        if toverflowObjectType == "shell" then
+            locals.overflowObject.host_computer.touch(touchPath, touchFileName)
+            touchFile = overflowObject.host_computer.File(touchPath + "/" + touchFileName)
+            locals.overflowOwner = touchFile.owner
+        end if
+    else
+        if overflowObjectType == "shell" or overflowObjectType == "computer" then
+            if overflowObjectType == "shell" then rootFolder = overflowObjectType.host_computer.File("/root").get_folders
+            if overflowObjectType == "computer" then rootFolder = overflowObjectType.File("/root").get_folders
+            if rootfolder.has_permission("w") then return "root"
+            if overflowObjectType == "shell" then homeFolders = overflowObjectType.host_computer.File("/home").get_folders
+            if overflowObjectType == "computer" then homeFolders = overflowObjectType.File("/home").get_folders
+            for userFolder in homeFolders
+                if userFolder.has_permission("w") then
+                    locals.overflowOwner = userFolder.name
+                    if locals.overflowOwner == "guest" then return "guest"
+                    locals.overflowOwner
+                end if
+            end for
+        end if
+    end if
+    return locals.overflowOwner           
+end function
