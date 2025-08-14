@@ -42,7 +42,7 @@ get_overflow_owner = function(overflowObject, touchFileName = null, touchPath = 
             touchFile = overflowObject.File(touchPath + "/" + touchFileName)
             locals.overflowOwner = touchFile.owner
         end if
-        if toverflowObjectType == "shell" then
+        if overflowObjectType == "shell" then
             locals.overflowObject.host_computer.touch(touchPath, touchFileName)
             touchFile = overflowObject.host_computer.File(touchPath + "/" + touchFileName)
             locals.overflowOwner = touchFile.owner
